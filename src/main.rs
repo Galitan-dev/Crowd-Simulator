@@ -23,7 +23,7 @@ pub const BACKGROUND_COLOR: Color = [46.0 / FF, 53.0 / FF, 50.0 / FF, 1.0];
 pub const SUCESS_COLOR: Color = [0.0 / FF, 168.0 / FF, 150.0 / FF, 1.0];
 pub const DANGER_COLOR: Color = [255.0 / FF, 168.0 / FF, 95.0 / FF, 1.0];
 
-const CELL_COUNT: usize = 10;
+const CELL_COUNT: usize = 4000;
 
 fn main() {
     let opengl = OpenGL::V3_2;

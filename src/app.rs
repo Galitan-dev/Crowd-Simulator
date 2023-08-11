@@ -3,7 +3,7 @@ use piston::{RenderArgs, UpdateArgs};
 
 use crate::{
     app::grid::{COLUMNS, ROWS},
-    traits::Draw,
+    traits::{Draw, Update},
     BACKGROUND_COLOR,
 };
 
@@ -44,5 +44,7 @@ impl App {
         });
     }
 
-    pub fn update(&mut self, _args: &UpdateArgs) {}
+    pub fn update(&mut self, _args: &UpdateArgs) {
+        self.grid.update();
+    }
 }
