@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use graphics::types::Color;
 use rand::{thread_rng, Rng};
 
@@ -47,6 +49,16 @@ impl Update for Grid {
             .copied()
             .collect::<Vec<_>>();
 
+        cells.sort_by(|a, b| {
+            if distance(a.pos()[0] as isize, a.pos()[1] as isize)
+                > distance(b.pos()[0] as isize, b.pos()[1] as isize)
+            {
+                Ordering::Less
+            } else {
+                Ordering::Greater
+            }
+        });
+
         for (i, cell) in cells.iter_mut().enumerate() {
             for target in cell.targets() {
                 if target[0] < 0 || target[1] < 0 {
@@ -58,10 +70,11 @@ impl Update for Grid {
                 if target_x < COLUMNS
                     && target_y < ROWS
                     && !occupied.contains(&[target_x, target_y])
-                    && (target_x != 2 || distance(target_x as isize, target_y as isize) > 3.0)
+                    && (target_x != 2 || distance(target_x as isize, target_y as isize) > 2.5)
                 {
                     cell.go_to(target_x, target_y);
                     occupied[i] = [target_x, target_y];
+                    // occupied.push([target_x, target_y]);
                     break;
                 }
             }
