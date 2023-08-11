@@ -23,6 +23,8 @@ pub const BACKGROUND_COLOR: Color = [46.0 / FF, 53.0 / FF, 50.0 / FF, 1.0];
 pub const SUCESS_COLOR: Color = [0.0 / FF, 168.0 / FF, 150.0 / FF, 1.0];
 pub const DANGER_COLOR: Color = [255.0 / FF, 168.0 / FF, 95.0 / FF, 1.0];
 
+const CELL_COUNT: usize = 10;
+
 fn main() {
     let opengl = OpenGL::V3_2;
 
@@ -33,7 +35,7 @@ fn main() {
         .build()
         .unwrap();
 
-    let mut app = App::new(GlGraphics::new(opengl), Grid {});
+    let mut app = App::new(GlGraphics::new(opengl), Grid::new(CELL_COUNT));
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
