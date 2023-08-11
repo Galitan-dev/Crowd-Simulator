@@ -3,65 +3,37 @@ extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 
+use app::{App, Grid};
 use glutin_window::GlutinWindow as Window;
+use graphics::types::Color;
 use opengl_graphics::{GlGraphics, OpenGL};
 use piston::event_loop::{EventSettings, Events};
-use piston::input::{RenderArgs, RenderEvent, UpdateArgs, UpdateEvent};
+use piston::input::{RenderEvent, UpdateEvent};
 use piston::window::WindowSettings;
 
-pub struct App {
-    gl: GlGraphics, // OpenGL drawing backend.
-    rotation: f64,  // Rotation for the square.
-}
+mod app;
+mod traits;
 
-impl App {
-    fn render(&mut self, args: &RenderArgs) {
-        use graphics::*;
+const WIDTH: u32 = 900;
+const HEIGHT: u32 = WIDTH / 16 * 9;
 
-        const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
-        const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
-
-        let square = rectangle::square(0.0, 0.0, 50.0);
-        let rotation = self.rotation;
-        let (x, y) = (args.window_size[0] / 2.0, args.window_size[1] / 2.0);
-
-        self.gl.draw(args.viewport(), |c, gl| {
-            // Clear the screen.
-            clear(GREEN, gl);
-
-            let transform = c
-                .transform
-                .trans(x, y)
-                .rot_rad(rotation)
-                .trans(-25.0, -25.0);
-
-            // Draw a box rotating around the middle of the screen.
-            rectangle(RED, square, transform, gl);
-        });
-    }
-
-    fn update(&mut self, args: &UpdateArgs) {
-        // Rotate 2 radians per second.
-        self.rotation += 2.0 * args.dt;
-    }
-}
+const FF: f32 = 255.0;
+pub const FOREGROUND_COLOR: Color = [238.0 / FF, 244.0 / FF, 212.0 / FF, 1.0];
+pub const BACKGROUND_COLOR: Color = [46.0 / FF, 53.0 / FF, 50.0 / FF, 1.0];
+pub const SUCESS_COLOR: Color = [0.0 / FF, 168.0 / FF, 150.0 / FF, 1.0];
+pub const DANGER_COLOR: Color = [255.0 / FF, 168.0 / FF, 95.0 / FF, 1.0];
 
 fn main() {
-    // Change this to OpenGL::V2_1 if not working.
     let opengl = OpenGL::V3_2;
 
-    // Create a Glutin window.
-    let mut window: Window = WindowSettings::new("spinning-square", [200, 200])
+    let mut window: Window = WindowSettings::new("Crowd Simulator", [WIDTH, HEIGHT])
         .graphics_api(opengl)
+        .resizable(false)
         .exit_on_esc(true)
         .build()
         .unwrap();
 
-    // Create a new game and run it.
-    let mut app = App {
-        gl: GlGraphics::new(opengl),
-        rotation: 0.0,
-    };
+    let mut app = App::new(GlGraphics::new(opengl), Grid {});
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
